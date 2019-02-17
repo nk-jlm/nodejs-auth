@@ -27,10 +27,16 @@ var config = convict({
 			format: '*',
 			default: 'server1.dev.test'
 		},
+		port: {
+			doc: 'Database port',
+			format: "port",
+			default: 27017,
+			env: "DB_PORT"
+		},
 		name: {
 			doc: "Database name",
 			format: String,
-			default: 'users'
+			default: 'testdb'
 		}
 	}
 });
