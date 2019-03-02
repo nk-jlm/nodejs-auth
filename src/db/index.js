@@ -1,7 +1,10 @@
 const MongoClient = require('mongodb').MongoClient;
 const config = require('../../config');
+const logger = require('../logger');
+const mongoose = require('mongoose');
+const User = require('../models/user').User;
 
-const COLLECTION_NAME = 'testdb';
+const COLLECTION_NAME = 'collectionForTest';
 
 class DbContext {
 	constructor() {
@@ -10,14 +13,13 @@ class DbContext {
 	}
 
 	async connect(options = {}) {
-		if (DbContext._connection !== null) {
+		if (DbContext._connection !== undefined) {
 			return DbContext._connection;
 		}
-
-		const connection = DbContext._connection = await MongoClient.connect(`mongodb://${options.host}:${options.port}`);
-		DbContext._db = connection.db(options.name);
-
-		await DbContext._setupDb(DbContext._db);
+		const connection = DbContext._connection = await mongoose.connect(`mongodb://${options.host}:${options.port}/${options.name}`, { useNewUrlParser: true });
+		//const connection = DbContext._connection = await MongoClient.connect(`mongodb://${options.host}:${options.port}`, { useNewUrlParser: true });
+		//DbContext._db = connection.db(options.name);
+		await DbContext._setupDb();
 
 		return connection;
 	}
@@ -35,8 +37,15 @@ class DbContext {
 		return DbContext._instance || (DbContext._instance = new DbContext());
 	}
 
-	static _setupDb(dbClient) {
-		dbClient.collection(COLLECTION_NAME).createIndexes([{ title: true }, { }]);
+	static _setupDb() {
+		let user = new User({
+			username: "Tester",
+			password: "testpass"
+		});
+		user.save((err)=>{
+			if(err) logger.error(err);
+		});
+		//dbClient.collection(COLLECTION_NAME).createIndex([{"type": 1}, {name: "text"}]);
 	}
 }
 

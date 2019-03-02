@@ -17,6 +17,7 @@
   "devDependencies": {
     "convict": "^4.4.1",
     "mongodb": "^3.1.13",
+    "mongoose": "^5.4.16",
     "winston": "^3.2.1"
   }
 }
