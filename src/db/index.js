@@ -2,9 +2,9 @@ const MongoClient = require('mongodb').MongoClient;
 const config = require('../../config');
 const logger = require('../logger');
 const mongoose = require('mongoose');
-const User = require('../models/user').User;
 
 const COLLECTION_NAME = 'collectionForTest';
+mongoose.Promise = global.Promise;
 
 class DbContext {
 	constructor() {
@@ -38,13 +38,6 @@ class DbContext {
 	}
 
 	static _setupDb() {
-		let user = new User({
-			username: "Tester",
-			password: "testpass"
-		});
-		user.save((err)=>{
-			if(err) logger.error(err);
-		});
 		//dbClient.collection(COLLECTION_NAME).createIndex([{"type": 1}, {name: "text"}]);
 	}
 }

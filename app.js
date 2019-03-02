@@ -1,46 +1,44 @@
 var express = require('express');
 var path = require('path');
-var createError = require('http-errors');
-//let logger = require('./src/logger');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
+const createError = require('http-errors');
+let logger = require('./src/logger');
+//const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const indexRouter = require('./routes/index');
+//const usersRouter = require('./routes/users');
+const User = require('./src/models/user');
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.use(logger('dev'));
+//app.use(logger.log('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', indexRouter);
+//app.use('/users', usersRouter);
 
 //Middleware
-app.get('/', (req, res, next)=> {
-	res.render('index', {
-		'title' : 'HOME'
-	});
-});
-/*app.use((req, res, next) => {
-	if (req.url === '/') {
-		res.end("Hello");
-	} else {
-		next();
-	}
-});*/
+app.use(require('express-session')({
+	secret: 'keyboard',
+	resave: false,
+	saveUninitialized: false
+}));
 
-app.use('/test', (req, res, next) => {
-	res.end("Test page");
-	next();
-});
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+//Todo - check methods
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use('/error', (req, res, next) => {
-	next(new Error("AAAA"));
+	next(new Error('You have got error'));
 });
 // catch 404 and forward to error handler
 app.use( (req, res, next) => {
