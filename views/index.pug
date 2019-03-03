@@ -2,3 +2,5 @@ extends layout
 
 block content
 	h1 Welcome#{user ? ', ' + user.username : ''}!
+	if (!user)
+		h2 Please login or sign in for viewing and searching photos

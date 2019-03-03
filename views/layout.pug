@@ -14,14 +14,14 @@ html
 								a(href=item.link) #{item.title}
 					if (!user)
 						li
-							a(href='/login') Login
+							a(href='/auth/signUp') Sing up
 						li
-							a(href='/register') Register
+							a(href='/auth/signIn') Sing in
 					if (user)
 						li
 							a Welcome #{user.name}
 						li
-							a(href='/logout') Logout
+							a(href='/auth/logout') Logout
 
 
 		.container

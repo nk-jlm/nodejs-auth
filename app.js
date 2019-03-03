@@ -1,45 +1,40 @@
 const express = require('express');
 const path = require('path');
 const createError = require('http-errors');
-const logger = require('./src/logger');
-//const logger = require('morgan');
+const logger = require('morgan');
 const cookieParser = require('cookie-parser');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const indexRouter = require('./src/routes/index');
-//const usersRouter = require('./routes/users');
-const User = require('./src/models/user');
+const session = require('express-session');
+
+const navList = [
+	{title: 'Home', link: '/'},
+	{title: 'Photos', link: '/photos'}
+];
+const indexRouter = require('./src/routes/index')(navList);
+const photosRouter = require('./src/routes/photos')(navList);
+const authRouter = require('./src/routes/auth')(navList);
+
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-//Middleware
-// app.use(logger.log('dev'));
+app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('express-session')({
-	secret: 'keyboard',
+app.use(session({
+	secret: 'photo',
 	resave: false,
-	saveUninitialized: false
+	saveUninitialized: true
 }));
-app.use(passport.initialize());
-app.use(passport.session( { secret: 'users-application' } ));
-
-const authenticateUser = User.authenticate();
-passport.use(new LocalStrategy((username, password, done) => {
-	authenticateUser(username, password, done)
-}));
-//Todo - check methods
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+require('./src/middleware/passport')(app);
 
 //Routes initialization
 app.use('/', indexRouter);
-//app.use('/users', usersRouter);
+app.use('/auth', authRouter);
+app.use('/photos', photosRouter);
 
 app.use('/error', (req, res, next) => {
 	next(new Error('You have got error'));
