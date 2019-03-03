@@ -1,0 +1,10 @@
+extends layout
+
+block content
+	h1 Photos list
+	.list-group
+		each item in photos
+			figure
+				img(src=item.path, alt=item.title)
+				figcaption #{item.title}
+				p.hash-tag #{item.hash}

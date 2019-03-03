@@ -7,9 +7,11 @@ html
 	body
 		nav.navbar.navbar-default
 			.container-fluid
-				.navbar-header
-					a.navbar-brand(href='#') Node.js Project
 				ul.navbar.border
+					if navList
+						each item in navList
+							li
+								a(href=item.link) #{item.title}
 					if (!user)
 						li
 							a(href='/login') Login

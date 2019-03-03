@@ -9,6 +9,12 @@ a {
 .navbar {
 	width: 100%;
 }
+.navbar li{
+	list-style-type: none;
+}
+img {
+	width: 100px;
+}
 .form-signin {
 	max-width: 330px;
 	padding: 15px;
