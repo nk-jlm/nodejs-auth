@@ -3,9 +3,11 @@ const photosRouter = express.Router();
 const dbContext = require('../db');
 const config = require('../../config');
 const logger = require('../logger');
+const instagramService = require('../services/instagramService');
+const photosController = require('../controllers/photosController');
 
 function router(navList) {
-	let {getById} = require('../controllers/photosController');
+	let {loadUserPosts} = photosController(instagramService, navList);
 	photosRouter.use((req, res, next)=> {
 		if(req.user) {
 			next();
@@ -13,31 +15,7 @@ function router(navList) {
 			res.redirect('/');
 		}
 	});
-	photosRouter.route('/').get((req, res)=> {
-		initDb().then(connection => {
-			try {
-				let client = connection.db(config.get('db').name);
-				let collection = client.collection('photos');
-				collection.find().toArray((err, data)=> {
-					res.render('photos', {
-						user: req.user,
-						navList: navList,
-						photos: data
-					});
-					}
-				)
-			} catch (err){
-				logger.error(err);
-			}
-		});
-	});
+	photosRouter.route('/').get(loadUserPosts);
 	return photosRouter;
-}
-async function initDb() {
-	try {
-		return await dbContext.getInstance().connect(config.get('db'));
-	} catch (err) {
-		logger.error(`Can't initialize connection to db. error: `, err)
-	}
 }
 module.exports = router;

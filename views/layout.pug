@@ -5,23 +5,24 @@ html
 		link(rel='stylesheet', href='/vendor/bootstrap.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
 	body
-		nav.navbar.navbar-default
-			.container-fluid
-				ul.navbar.border
-					if navList
-						each item in navList
+		header.container.fixed-top
+			nav.navbar.navbar-default
+				.container-fluid
+					ul.navbar.border
+						if navList
+							each item in navList
+								li
+									a(href=item.link) #{item.title}
+						if (!user)
 							li
-								a(href=item.link) #{item.title}
-					if (!user)
-						li
-							a(href='/auth/signUp') Sing up
-						li
-							a(href='/auth/signIn') Sing in
-					if (user)
-						li
-							a Welcome #{user.name}
-						li
-							a(href='/auth/logout') Logout
+								a(href='/auth/signUp') Sing up
+							li
+								a(href='/auth/signIn') Sing in
+						if (user)
+							li
+								a(href='/auth/profile') Profile
+							li
+								a(href='/auth/logout') Logout
 
 
 		.container

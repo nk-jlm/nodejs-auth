@@ -1,10 +1,26 @@
 extends layout
-
+mixin figureElem(item)
+	figure.placeholder
+		img(src=item.path, alt=item.title)
+		figcaption #{item.title}
+		p.hash-tag #{item.hash}
 block content
 	h1 Photos list
 	.list-group
-		each item in photos
-			figure
-				img(src=item.path, alt=item.title)
-				figcaption #{item.title}
-				p.hash-tag #{item.hash}
+		each item in posts
+			if (item)
+				figure
+					if (item.images)
+						img(src=item.images.standard_resolution.url, width=item.images.standard_resolution.width, height=item.images.standard_resolution.height)
+					if (item.likes)
+						p.likes likes count: #{item.likes.count}
+					if (item.tags)
+						if(item.tags.length > 0)
+							p
+								| Tags:
+								each tag in item.tags
+									span ##{tag}&nbsp;
+					if(item.location)
+						p.location Location: #{item.location.name}
+				if(item.path)
+					+figureElem(item)

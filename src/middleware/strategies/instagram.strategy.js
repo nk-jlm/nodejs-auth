@@ -19,21 +19,17 @@ module.exports = function instagramStrategy() {
 						instagramId: profile.id,
 						username: profile.username,
 						avatar: profile._json.data.profile_picture,
-						counts: profile._json.data.counts
+						accessToken: accessToken
 					};
 					let client = connection.db(config.get('db').name);
 					let collection = client.collection('users');
 					logger.log(profile);
 					collection.findOne({instagramId: userData.instagramId}, ((err, user)=> {
-						if (user) {
-							logger.log('user', user);
-							done(null, user);
-						} else {
-							collection.insertOne(userData, (err, result)=> {
-								logger.log('result', result);
-								done(null, userData);
-							});
-						}
+						logger.log('user', user);
+						collection.save(userData, (err, result) => {
+							logger.log('result', result);
+							done(null, userData);
+						});
 					}));
 				} catch (err){
 					logger.error(err);

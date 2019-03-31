@@ -9,12 +9,19 @@ a {
 .navbar {
 	width: 100%;
 }
+.navbar.border {
+	background: white;
+}
 .navbar li{
 	list-style-type: none;
 }
-img {
-	width: 100px;
+figure.placeholder img {
+	width: 600px;
 }
+
+/*img {
+	width: 100px;
+}*/
 .form-signin {
 	max-width: 330px;
 	padding: 15px;
