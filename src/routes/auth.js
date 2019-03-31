@@ -16,12 +16,12 @@ function router(navList) {
 		})
 		.post((req, res)=> {
 			logger.log(req.body);
-			const {username, password} = req.body;
+			const {username, email, password} = req.body;
 			initDb().then(connection => {
 				try {
 					let client = connection.db(config.get('db').name);
 					let collection = client.collection('users');
-					const user = {username, password};
+					const user = {username, email, password};
 					let result = collection.insertOne(user);
 					logger.log(result);
 				} catch (err){
@@ -35,7 +35,11 @@ function router(navList) {
 	authRouter.route('/profile')
 		.get((req, res)=> {
 			logger.log(req.user);
-			res.json(req.user);
+			//res.json(req.user);
+			res.render('profile', {
+				navList: navList,
+				user: req.user
+			});
 		});
 
 	authRouter.route('/signIn')
@@ -47,8 +51,21 @@ function router(navList) {
 		})
 		.post(passport.authenticate('local', {
 			successRedirect: '/auth/profile',
-			failureRedirect: '/'
+			failureRedirect: '/auth/signIn'
 		}));
+
+
+	authRouter.route('/instagram')
+		.get(passport.authenticate('instagram'),
+			function(req, res){});
+
+	authRouter.route('/instagram/callback')
+		.get(passport.authenticate('instagram',
+			{ failureRedirect: '/auth/signIn' }),
+			function(req, res) {
+				res.redirect('/auth/profile');
+			});
+
 	authRouter.route('/logout')
 		.get((req, res) => {
 			req.logout();

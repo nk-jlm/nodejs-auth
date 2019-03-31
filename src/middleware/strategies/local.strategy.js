@@ -8,6 +8,7 @@ module.exports = function localStrategy() {
 	passport.use(new Strategy(
 		{
 			usernameField: 'username',
+			emailField: 'email',
 			passwordField: 'password'
 		},
 		(username, password, done) => {

@@ -1,5 +1,6 @@
 const passport = require('passport');
 require('./strategies/local.strategy')();
+require('./strategies/instagram.strategy')();
 
 module.exports = function PassportConfig(app) {
 	app.use(passport.initialize());
