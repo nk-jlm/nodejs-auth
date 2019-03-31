@@ -3,8 +3,8 @@ const passport = require('passport');
 const logger = require('../../logger');
 const dbContext = require('../../db');
 const config = require('../../../config');
-const INSTAGRAM_CLIENT_ID = '2bc1a2d6269a409e92cde1fa24213f3f';
-const INSTAGRAM_CLIENT_SECRET = 'be696c6bb01f45c7927ddb9e8a7e2c4b';
+const INSTAGRAM_CLIENT_ID = '';
+const INSTAGRAM_CLIENT_SECRET = '';
 
 module.exports = function instagramStrategy() {
 	passport.use(new Strategy({

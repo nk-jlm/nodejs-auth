@@ -5,6 +5,7 @@ const config = require('../../config');
 const logger = require('../logger');
 
 function router(navList) {
+	let {getById} = require('../controllers/photosController');
 	photosRouter.use((req, res, next)=> {
 		if(req.user) {
 			next();
@@ -25,7 +26,6 @@ function router(navList) {
 					});
 					}
 				)
-
 			} catch (err){
 				logger.error(err);
 			}
