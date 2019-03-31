@@ -1,12 +1,12 @@
 const express = require('express');
 const authRouter = express.Router();
-const dbContext = require('../db');
-const config = require('../../config');
 const logger = require('../logger');
+const authController = require('../controllers/authController');
 const passport = require('passport');
 
-
 function router(navList) {
+	const {resetPassword, signUp, loadResetPage, updatePassword} = authController();
+
 	authRouter.route('/signUp')
 		.get((req, res)=> {
 			res.render('signup', {
@@ -14,24 +14,7 @@ function router(navList) {
 				user: req.user
 			});
 		})
-		.post((req, res)=> {
-			logger.log(req.body);
-			const {username, email, password} = req.body;
-			initDb().then(connection => {
-				try {
-					let client = connection.db(config.get('db').name);
-					let collection = client.collection('users');
-					const user = {username, email, password};
-					let result = collection.insertOne(user);
-					logger.log(result);
-				} catch (err){
-					logger.error(err);
-				}
-			});
-			req.login(req.body, ()=> {
-				res.redirect('/auth/profile');
-			});
-		});
+		.post(signUp);
 	authRouter.route('/profile')
 		.get((req, res)=> {
 			logger.log(req.user);
@@ -71,13 +54,18 @@ function router(navList) {
 			req.logout();
 			res.redirect('/');
 		});
-	async function initDb() {
-		try {
-			return await dbContext.getInstance().connect(config.get('db'));
-		} catch (err) {
-			logger.error(`Can't initialize connection to db. error: `, err)
-		}
-	}
+
+	authRouter.route('/forgot')
+		.get( (req, res) =>
+			res.render('forgot', {
+				user: req.user
+			})
+		)
+		.post(resetPassword);
+
+	authRouter.route('/reset/:token')
+		.get(loadResetPage)
+		.post(updatePassword);
 
 	return authRouter;
 }

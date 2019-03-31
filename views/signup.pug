@@ -4,9 +4,9 @@ block content
 	.container
 		form.form-signin.col-md-2.col-sm-3.text-center(role='form', action="/auth/signUp",method="post")
 			h2.form-signin-heading Sign up!
-			input.form-control(type='email', name="email", placeholder='Your eMail')
-			input.form-control(type='text', name="username", placeholder='Name')
-			input.form-control(type='password', name="password", placeholder='Password')
+			input.form-control(type='email', required name="email", placeholder='Your eMail')
+			input.form-control(type='text', required name="username", placeholder='Name')
+			input.form-control(type='password', required name="password", placeholder='Password')
 			button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign up
 
 			button.btn.btn-lg.btn-primary.btn-block

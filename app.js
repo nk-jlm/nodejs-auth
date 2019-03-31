@@ -4,6 +4,7 @@ const createError = require('http-errors');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const flash = require('express-flash');
 
 const navList = [
 	{title: 'Home', link: '/'},
@@ -31,6 +32,7 @@ app.use(session({
 }));
 require('./src/middleware/passport')(app);
 
+app.use(flash());
 //Routes initialization
 app.use('/', indexRouter);
 app.use('/auth', authRouter);

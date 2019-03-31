@@ -17,9 +17,13 @@ module.exports = function localStrategy() {
 					let client = connection.db(config.get('db').name);
 					let collection = client.collection('users');
 					collection.findOne({username}, ((err, user)=> {
-						if ((user.password) === password) {
-							logger.log(user);
-							done(null, user);
+						if (user) {
+							if ((user.password) === password) {
+								logger.log(user);
+								done(null, user);
+							} else {
+								done(null, false);
+							}
 						} else {
 							done(null, false);
 						}
