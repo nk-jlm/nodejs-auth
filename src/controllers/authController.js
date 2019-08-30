@@ -16,6 +16,14 @@ function authController() {
 			pass: account.pass // generated ethereal password
 		}
 	});
+
+	function isValid(password, req, res) {
+		if (password.length === 0) {
+			req.flash('error', 'Please enter correct password');
+			res.redirect('/auth/signUp');
+		}
+	}
+
 	async function sendEmail(user, host, token){
 		let mailOptions = {
 			from: 'Nina',
@@ -73,10 +81,7 @@ function authController() {
 	}
 	function signUp(req, res) {
 		const {username, email, password} = req.body;
-		if (password.length === 0) {
-			req.flash('error', 'Please enter correct password');
-			res.redirect('/auth/signUp');
-		}
+		isValid(password, req, res);
 		initDb().then((connection) => {
 			try {
 				let client = connection.db(config.get('db').name);
